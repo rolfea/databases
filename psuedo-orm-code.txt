@@ -1,0 +1,56 @@
+'remove duplicates in a query response'
+  -- returns individual users post table
+  SELECT DISTINCT column FROM table
+  SELECT DISTINCT user FROM post;
+
+'filter records using inequalities, pattern matching, ranges, and boolean logic'
+  -- returns comments with a rating greater than 5
+  SELECT column WHERE pattern/boolean/range
+  SELECT comment WHERE (rating > 5);
+  posts = Post.all
+  comments = posts.comments
+  top_comments = comments.above_rating(5)
+
+'sort records in a particular order/limit records returned'
+  -- returns the 10 highest rated posts from the forum
+  SELECT column FROM table ORDER BY column_with_value ASC/DESC
+  SELECT post FROM forum ORDER BY rating DESC LIMIT 10;
+  posts = Post.all.order_by(rating)
+  top_ten_posts = posts[0..9]
+
+'group records into sections'
+  -- returns all posts organized by user_id
+  SELECT * FROM posts GROUP BY user_id
+  posts = Post.all
+  post_by_user = posts.group_by(user_id)
+
+'perform calculations using aggregate functions'
+  -- calculate the average amount of posts of different ratings for a specific user on a forum
+  SELECT rating, AVG(post) FROM forum WHERE (user_id == 2) GROUP BY rating;
+  ----
+  posts = Post.all
+  user_two_posts = posts.user("2")
+  posts_by_rating = user_two_posts.group_by(rating)
+  -- assuming a two rating system for simplicity
+  thumbs_up_posts = []
+  posts_by_rating.each do |post|
+    if post.rating == "Thumbs Up"
+      thumbs_up_posts << post
+    end
+  end
+  avg_thumbs_up = thumbs_up_posts.length / 2
+  
+'join tables using cross join, inner join, and outer join'
+  -- create a new table combining users and posts (inner join)
+  SELECT * FROM posts JOIN users ON posts.user_id = users.id;
+  -- same as above table but will include posts with no user_id
+  SELECT * FROM posts LEFT JOIN users ON posts.user_id = users.id;
+  ----
+  posts = Post.all
+  users = User.all
+  posts_with_users = []
+  posts.each do |post|
+    if !post.user_id.nil?
+      posts_with_users << User.id("post.user_id")
+    end
+  end
